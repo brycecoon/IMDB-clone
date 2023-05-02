@@ -1,21 +1,36 @@
- <!DOCTYPE html>
- <html lang="en">
- <head>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width= , initial-scale=1.0">
-    <link rel="stylesheet" href="style.css"></link>
+    <link rel="stylesheet" href="style.css">
+    </link>
     <script src="script.js"></script>
     <title>Document</title>
- </head>
- <body>
+</head>
+
+<!-- REQUIREMENT 1: body, div, h1, form, input, nav, select, option, button, p 
+     REQUIREMENT 2: search-bar, Logo, search-form, search-input, genres, genre-select, page-buttons
+page-down, page-num, page-up, sidebar, nowPlaying, trending, tv-shows, people-->
+<body>
     <div id="search-bar">
-        <h1 id="search-bar">IMDB</h1>
+        <h1 id="Logo">Movie Search</h1>
         <form id="search-form" action="">
-            <input type="text" id="search-input" placeholder="Search IMDB">
+            <input type="text" id="search-input" size="30" placeholder="Search movies here">
         </form>
     </div>
     <nav id="genres">
+        <select name="genre-select" id="genreOptions">
+            <option value="" disabled selected>Pick a genre</option>
+        </select>
+        <div id="page-buttons">
+            <button id="page-down">
+                < </button>
+                    <p id="page-num">Page: </p>
+                    <button id="page-up">></button>
+        </div>
     </nav>
     <nav id="sidebar">
         <p id="nowPlaying">Now Playing</p>
@@ -24,5 +39,6 @@
         <p id="People">People</p>
     </nav>
     <div id="movies-grid"></div>
- </body>
- </html>
+</body>
+
+</html>
