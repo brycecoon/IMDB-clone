@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let pageNumber = 1;
     let currentState = "nowPlaying";
+    let isSingleView = false;
 
     async function fetchGenre(genreID, pageNum) {
         if (currentState != "genre") {
@@ -96,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentState != "tv") {
             pageNumber = 1;
             currentState = "tv";
-        }     
+        }
         setButtonStyle();
 
         const response = await fetch(`${apiBaseURL}/tv/top_rated?api_key=${apiKey}&language=en-US&sort_by=vote_average.desc&include_adult=false&include_video=false&page=${pageNumber}&primary_release_date.gte=1980&vote_count.gte=100&vote_average.gte=5.5&with_watch_monetization_types=flatrate`);
@@ -150,17 +151,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function displayShows(movies) {
         const validMovies = movies.filter((movie) => movie.poster_path && movie.original_language === 'en');
-        console.log(validMovies);
+        // console.log(validMovies);
         if (validMovies.length > 0) {
             moviesGrid.innerHTML = validMovies
                 .map((movie) =>
-                    `<div class="movie-card">
+                `<div class="movie-card" data-id="${movie.id}">
                 <img src="${imageBaseUrl}${movie.poster_path}" />
                 <p>⭐${movie.vote_average}/10</p>
                 <h1>${movie.original_name}</h1>
               </div>`
                 )
                 .join("");
+
+            // Get all movie card elements and add a click event listener to each one
+            const movieCards = document.querySelectorAll(".movie-card");
+            // console.log(movieCards);
+            movieCards.forEach((movieCard) => {
+                movieCard.addEventListener("click", () => {
+                    const movieId = movieCard.dataset.id;
+                    console.log(movieId);
+                    displaySingleShow(movieId, "tv");
+                });
+            });
         } else {
             // If there are no valid movies, clear the content of the moviesGrid element
             moviesGrid.innerHTML = "";
@@ -173,37 +185,74 @@ document.addEventListener('DOMContentLoaded', () => {
         if (validMovies.length > 0) {
             moviesGrid.innerHTML = validMovies
                 .map((movie) =>
-                    `<div class="movie-card">
-                <img src="${imageBaseUrl}${movie.poster_path}" alt="Image not found"/>
-                <p>⭐${movie.vote_average}/10 (${movie.vote_count} votes)</p>
-                <h1>${movie.title}</h1>
-                <p>${movie.release_date}</p>
-                <p id="description">${movie.overview}</p> 
-              </div>`
+                    `<div class="movie-card" data-id="${movie.id}">
+              <img src="${imageBaseUrl}${movie.poster_path}" alt="Image not found"/>
+              <p>⭐${movie.vote_average}/10 (${movie.vote_count} votes)</p>
+              <h1>${movie.title}</h1>
+              <p>${movie.release_date}</p>
+            </div>`
                 )
                 .join("");
+
+            // Get all movie card elements and add a click event listener to each one
+            const movieCards = document.querySelectorAll(".movie-card");
+            movieCards.forEach((movieCard) => {
+                // console.log(movieCard);
+                movieCard.addEventListener("click", () => {
+                    const movieId = movieCard.dataset.id;
+                    displaySingleMovie(movieId, "movie");
+                });
+            });
         } else {
             // If there are no valid movies, clear the content of the moviesGrid element
             moviesGrid.innerHTML = "";
         }
     }
 
-    function handleImageClick(movie) {
-        moviesGrid.innerHTML = `<div class="movie-card">
-        <img src="${imageBaseUrl}${movie.poster_path}" alt="Image not found"/>
-        <p>⭐${movie.vote_average}/10 (${movie.vote_count} votes)</p>
-        <h1>${movie.title}</h1>
-        <p>${movie.release_date}</p>
-        <p id="description">${movie.overview}</p> 
-      </div>`
+    async function displaySingleMovie(movieId, type) {
+        // const response = await fetch(`${apiBaseURL}/tv/${tv_id}?api_key=${apiKey}&language=en-US&sort_by=vote_average.desc&include_adult=false&include_video=false&page=${pageNumber}&primary_release_date.gte=1980&vote_count.gte=100&vote_average.gte=5.5&with_watch_monetization_types=flatrate`);
+        moviesGrid.classList.toggle("singleView");
+        isSingleView = true;
+
+        const response = await fetch(`https://api.themoviedb.org/3/${type}/${movieId}?api_key=${apiKey}&language=en-US`);
+        const movie = await response.json();
+        console.log(movie);
+        moviesGrid.innerHTML = `
+          <div class="movie-card">
+            <img src="${imageBaseUrl}${movie.poster_path}" alt="Image not found"/>
+            <p>⭐${movie.vote_average}/10 (${movie.vote_count} votes)</p>
+            <h1>${movie.title}</h1>
+            <p>${movie.release_date}</p>
+            <p id="description">${movie.overview}</p> 
+            <a href="${movie.homepage}">Visit homepage</a>
+          </div>
+        `;
+    }
+
+    async function displaySingleShow(movieId, type) {
+        // const response = await fetch(`${apiBaseURL}/tv/${tv_id}?api_key=${apiKey}&language=en-US&sort_by=vote_average.desc&include_adult=false&include_video=false&page=${pageNumber}&primary_release_date.gte=1980&vote_count.gte=100&vote_average.gte=5.5&with_watch_monetization_types=flatrate`);
+        moviesGrid.classList.toggle("singleView");
+        isSingleView = true;
+
+        const response = await fetch(`https://api.themoviedb.org/3/${type}/${movieId}?api_key=${apiKey}&language=en-US`);
+        const movie = await response.json();
+        console.log(movie);
+        moviesGrid.innerHTML = `
+          <div class="movie-card">
+            <img src="${imageBaseUrl}${movie.poster_path}" alt="Image not found"/>
+            <p>⭐${movie.vote_average}/10 (${movie.vote_count} votes)</p>
+            <h1>${movie.name}</h1>
+            <p id="description">${movie.overview}</p> 
+            <a href="${movie.homepage}">Visit homepage</a>
+          </div>
+        `;
     }
 
     function addClickEventToMovies() {
         movieCards.forEach((movieCard) => {
-            document.write("hello");
             movieCard.addEventListener('click', () => {
-                const movieId = movieCard.id;
                 document.write("hello");
+                const movieId = movieCard.id;
 
                 // Fetch movie details based on the ID
                 fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`)
@@ -237,6 +286,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setButtonStyle() {
+
+        if(isSingleView)
+        {
+            moviesGrid.classList.toggle("singleView");
+        }
+        isSingleView = false;
+
         nowPlaying.style.backgroundColor = "#AF5B5B";
         nowPlaying.style.color = "#EDDEA4";
         trending.style.backgroundColor = "#AF5B5B";
@@ -267,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     generateGenres();
-    // addClickEventToMovies();
+    addClickEventToMovies();
     fetchMoviesNowPlaying(pageNumber);
 
 

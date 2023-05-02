@@ -6,7 +6,7 @@
     --Genres: #F9F7F3;
     --other: #EDDEA4;
 
-  }
+}
 
 body {
     background: linear-gradient(to bottom, #593F62, #EDDEA4);
@@ -15,7 +15,7 @@ body {
 
 #search-form {
     margin: 0;
-  }
+}
 
 #page-buttons {
     display: flex;
@@ -112,7 +112,7 @@ form {
     justify-content: center;
 
     border: 1px solid black;
-    padding: 10px;  
+    padding: 10px;
 }
 
 #sidebar p:hover {
@@ -120,7 +120,7 @@ form {
 }
 
 #page-num {
-    position:relative;
+    position: relative;
     top: -12px;
     color: var(--Background);
     margin-left: 5px;
@@ -129,7 +129,7 @@ form {
 }
 
 #genres {
-   display: flex;
+    display: flex;
     width: 94%;
     margin-left: 10px;
     /* justify-content: end; */
@@ -137,21 +137,19 @@ form {
     background-color: var(--Genres);
     padding: 10px;
     border-radius: 3px;
-     height: 30px;
-}
-
-#description {
-    display: none;
-}
-
-.movie-card:hover #description {
-    /* display: inline; */
+    height: 30px;
 }
 
 input {
     padding-right: 130px;
     width: 150px;
 }
+
+    #movies-grid.singleView  {        
+        grid-template-columns: repeat(1, 1fr);
+        margin-left: 0px;
+        width: 65%;
+    }
 
 /*  REQUIREMENT 7: at least 2 media queries (I used 4) */
 /* MEDIA QUERIES */
@@ -177,6 +175,7 @@ input {
         flex-direction: row;
         width: 90%;
     }
+
     .movie-card {
         width: 100%;
         border-radius: 10px;
@@ -199,8 +198,8 @@ input {
     #movies-grid {
         grid-template-columns: repeat(2, 1fr);
         width: 78%;
-
     }
+
 
     #sidebar {
         width: 20%;
@@ -232,4 +231,5 @@ input {
         margin-left: 5px;
         width: 13%;
     }
+
 }
